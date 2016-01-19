@@ -53,7 +53,7 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
      * Finds user by username
      *
      * @param  string      $username
-     * @return static|null
+     * @return User
      */
     public static function findByUsername($username)
     {
