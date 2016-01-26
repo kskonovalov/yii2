@@ -51,8 +51,6 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        $user = User::findByUsername("admin");
-        $user->username;
         return $this->render('index');
     }
 
@@ -69,6 +67,24 @@ class SiteController extends Controller
         return $this->render('login', [
             'model' => $model,
         ]);
+    }
+
+    public function actionSignup()
+    {
+        if (!\Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
+        $model = new User();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->goHome();
+        } else {
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        }
+
     }
 
     public function actionLogout()
@@ -94,13 +110,5 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
-    }
-
-    public function actionGetgoodsbyemailprovider($id)
-    {
-        Goods::find()
-            ->withEmailProvider($id)
-            ->asArray()
-            ->all();
     }
 }
