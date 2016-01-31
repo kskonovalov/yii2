@@ -5,12 +5,12 @@ namespace app\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Calendar;
+use app\models\Access;
 
 /**
- * CalendarSearch represents the model behind the search form about `app\models\Calendar`.
+ * AccessSearch represents the model behind the search form about `app\models\Access`.
  */
-class CalendarSearch extends Calendar
+class AccessSearch extends Access
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class CalendarSearch extends Calendar
     public function rules()
     {
         return [
-            [['id', 'creator'], 'integer'],
-            [['text', 'date_event'], 'safe'],
+            [['id', 'user_owner', 'user_guest'], 'integer'],
+            [['date'], 'safe'],
         ];
     }
 
@@ -41,12 +41,11 @@ class CalendarSearch extends Calendar
      */
     public function search($params)
     {
-        $query = Calendar::find();
+        $query = Access::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
 
         $this->load($params);
 
@@ -58,17 +57,11 @@ class CalendarSearch extends Calendar
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'creator' => $this->creator,
-            'date_event' => $this->date_event,
+            'user_owner' => $this->user_owner,
+            'user_guest' => $this->user_guest,
+            'date' => $this->date,
         ]);
 
-        $query->andFilterWhere(['like', 'text', $this->text]);
-
         return $dataProvider;
-    }
-
-    public function actionMynotes()
-    {
-
     }
 }

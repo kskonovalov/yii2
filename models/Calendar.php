@@ -30,8 +30,7 @@ class Calendar extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['text', 'creator'], 'required'],
-            [['text'], 'string'],
+            [['text', 'creator'], 'string'],
             [['creator'], 'integer'],
             [['date_event'], 'safe']
         ];
@@ -53,7 +52,7 @@ class Calendar extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCreator0()
+    public function getCreator()
     {
         return $this->hasOne(ClndrUser::className(), ['id' => 'creator']);
     }
@@ -65,5 +64,18 @@ class Calendar extends \yii\db\ActiveRecord
     public static function find()
     {
         return new \app\models\query\CalendarQuery(get_called_class());
+    }
+    /**
+     * Before save event handler
+     * @param bool $insert
+     * @return bool
+     */
+    public function beforeSave ($insert)
+    {
+            if ($this->getIsNewRecord())
+            {
+                $this->creator = Yii::$app->user->id;
+            }
+            return true;
     }
 }
