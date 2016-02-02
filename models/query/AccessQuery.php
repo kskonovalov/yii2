@@ -23,7 +23,7 @@ class AccessQuery extends \yii\db\ActiveQuery
         );
     }
     /**
-     * @param $user_guest
+     * @param $date
      * @return $this
      */
     public function withDate($date)
