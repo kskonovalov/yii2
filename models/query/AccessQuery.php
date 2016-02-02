@@ -22,6 +22,19 @@ class AccessQuery extends \yii\db\ActiveQuery
             ]
         );
     }
+    /**
+     * @param $user_guest
+     * @return $this
+     */
+    public function withDate($date)
+    {
+        return $this->andWhere(
+            'date = :date',
+            [
+                ":date" => $date
+            ]
+        );
+    }
 
     /**
      * @inheritdoc

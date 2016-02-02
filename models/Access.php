@@ -81,6 +81,7 @@ class Access extends \yii\db\ActiveRecord
 
         $accessCalendar = self::find()
             ->withGuest(Yii::$app->user->id)
+            ->withDate($model->date_event)
             ->exists();
         if($accessCalendar)
             return self::ACCESS_GUEST;
