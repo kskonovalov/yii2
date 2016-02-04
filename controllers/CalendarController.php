@@ -63,9 +63,9 @@ class CalendarController extends Controller
     {
         $searchModel = new CalendarSearch();
         $dataProvider = $searchModel->search([
-            'CalendarSearch' => array_merge(
-                ['creator' => Yii::$app->user->id]
-            )
+            'CalendarSearch' => [
+                'creator' => Yii::$app->user->id
+            ]
         ]);
 
         return $this->render('index', [
@@ -75,16 +75,15 @@ class CalendarController extends Controller
     }
 
 
-    public function actionFriendnotes($id)
+    public function actionFriendnotes($id, $date)
     {
         $searchModel = new CalendarSearch();
-        $dataProvider = $searchModel->search([
+        $dataProvider = $searchModel->searchFriendNotes([
             'CalendarSearch' => [
                 'creator' => $id,
-                'blabla' => 5,
                 'access' => [
                     'user_id' => Yii::$app->user->id,
-                    //'date' => $date
+                    'date_event' => $date
                 ]
             ]
         ]);

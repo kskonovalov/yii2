@@ -22,7 +22,7 @@ class CalendarSearch extends Calendar
     {
         return [
             [['id', 'creator'], 'integer'],
-            [['text', 'date_event'], 'safe'],
+            [['text', 'date_event', 'access'], 'safe'],
         ];
     }
 
@@ -77,6 +77,57 @@ class CalendarSearch extends Calendar
             'clndr_calendar.date_event' => $this->date_event,
             'clndr_access.user_guest' => $this->access['user_id'],
         ]);
+
+
+        $query->andFilterWhere(['like', 'clndr_calendar.text', $this->text]);
+//VAR_DUMP($query->createCommand()->getRawSql());
+        return $dataProvider;
+    }
+    /**
+     * Creates data provider instance with search query applied
+     *
+     * @param array $params
+     *
+     * @return ActiveDataProvider
+     */
+    public function searchFriendNotes($params)
+    {
+        $query = Calendar::find();
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $query->joinWith(['access']);
+
+        $dataProvider->sort->attributes['access'] = [
+            'asc' => ['clndr_access.user_id' => SORT_ASC],
+            'desc' => ['clndr_access.user_id' => SORT_DESC],
+        ];
+
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere([
+            'clndr_calendar.id' => $this->id,
+            'clndr_calendar.creator' => $this->creator,
+            'clndr_calendar.date_event' => $this->date_event,
+            'clndr_access.user_guest' => $this->access['user_id'],
+        ]);
+
+        $query->andWhere('clndr_access.date = date("' .
+            $this->access['date_event'] . '")'
+        );
+
+        $query->andWhere('date(clndr_calendar.date_event) = date("' .
+            $this->access['date_event'] . '")'
+        );
 
         $query->andFilterWhere(['like', 'clndr_calendar.text', $this->text]);
 //VAR_DUMP($query->createCommand()->getRawSql());
