@@ -78,7 +78,6 @@ class Access extends \yii\db\ActiveRecord
         {
             return self::ACCESS_CREATOR;
         }
-
         $accessCalendar = self::find()
             ->withGuest(Yii::$app->user->id)
             ->withDate($model->date_event)
@@ -87,6 +86,22 @@ class Access extends \yii\db\ActiveRecord
             return self::ACCESS_GUEST;
 
         return false;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDay()
+    {
+        return $this->hasMany(Calendar::className(), ['date' => 'date_event']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasMany(User::className(), ['user_id' => 'id'])
     }
 
     /**

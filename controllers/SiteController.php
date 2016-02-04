@@ -54,7 +54,7 @@ class SiteController extends Controller
         if(Yii::$app->user->isGuest)
             return $this->render('index');
         else
-            return $this->redirect("/calendar/mynotes");
+            return $this->redirect("/calendar/mynotes", 301);
     }
 
     public function actionLogin()
