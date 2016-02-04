@@ -13,6 +13,8 @@ use Yii;
  * @property string $date_event
  *
  * @property ClndrUser $creator0
+ *
+ * @property Access @access
  */
 class Calendar extends \yii\db\ActiveRecord
 {
@@ -65,6 +67,7 @@ class Calendar extends \yii\db\ActiveRecord
     {
         return new \app\models\query\CalendarQuery(get_called_class());
     }
+
     /**
      * Before save event handler
      * @param bool $insert
@@ -77,5 +80,18 @@ class Calendar extends \yii\db\ActiveRecord
                 $this->creator = Yii::$app->user->id;
             }
             return true;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAccess()
+    {
+        return $this->hasMany(Access::className(), ['date' => 'date_event']);
+    }
+
+    public function getUser()
+    {
+        return $this->hasOne(User::className(), ['id' => 'creator']);
     }
 }

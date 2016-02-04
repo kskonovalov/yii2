@@ -2,6 +2,7 @@
 
 namespace app\models\search;
 
+use app\models\Access;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -12,6 +13,8 @@ use app\models\Calendar;
  */
 class CalendarSearch extends Calendar
 {
+    public $access;
+
     /**
      * @inheritdoc
      */
@@ -21,6 +24,11 @@ class CalendarSearch extends Calendar
             [['id', 'creator'], 'integer'],
             [['text', 'date_event'], 'safe'],
         ];
+    }
+
+    public function attributes()
+    {
+        return array_merge(parent::attributes(), ['access']);
     }
 
     /**
@@ -47,6 +55,13 @@ class CalendarSearch extends Calendar
             'query' => $query,
         ]);
 
+        $query->joinWith(['access']);
+
+        $dataProvider->sort->attributes['access'] = [
+            'asc' => ['clndr_access.user_id' => SORT_ASC],
+            'desc' => ['clndr_access.user_id' => SORT_DESC],
+        ];
+
 
         $this->load($params);
 
@@ -57,13 +72,14 @@ class CalendarSearch extends Calendar
         }
 
         $query->andFilterWhere([
-            'id' => $this->id,
-            'creator' => $this->creator,
-            'date_event' => $this->date_event,
+            'clndr_calendar.id' => $this->id,
+            'clndr_calendar.creator' => $this->creator,
+            'clndr_calendar.date_event' => $this->date_event,
+            'clndr_access.user_guest' => $this->access['user_id'],
         ]);
 
-        $query->andFilterWhere(['like', 'text', $this->text]);
-
+        $query->andFilterWhere(['like', 'clndr_calendar.text', $this->text]);
+//VAR_DUMP($query->createCommand()->getRawSql());
         return $dataProvider;
     }
 

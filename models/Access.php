@@ -34,7 +34,8 @@ class Access extends \yii\db\ActiveRecord
     {
         return [
             [['user_owner', 'user_guest'], 'required'],
-            [['user_owner', 'user_guest'], 'integer']
+            [['user_owner', 'user_guest'], 'integer'],
+            [['date'], 'string']
         ];
     }
 
@@ -91,7 +92,7 @@ class Access extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getDay()
+    public function getCalendar()
     {
         return $this->hasMany(Calendar::className(), ['date' => 'date_event']);
     }
@@ -101,7 +102,7 @@ class Access extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasMany(User::className(), ['user_id' => 'id'])
+        return $this->hasMany(User::className(), ['user_id' => 'id']);
     }
 
     /**
