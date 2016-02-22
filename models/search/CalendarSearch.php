@@ -101,8 +101,8 @@ class CalendarSearch extends Calendar
         $query->joinWith(['access']);
 
         $dataProvider->sort->attributes['access'] = [
-            'asc' => ['clndr_access.user_id' => SORT_ASC],
-            'desc' => ['clndr_access.user_id' => SORT_DESC],
+            'asc' => ['access.user_id' => SORT_ASC],
+            'desc' => ['access.user_id' => SORT_DESC],
         ];
 
 
